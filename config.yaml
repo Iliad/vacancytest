@@ -1,0 +1,9 @@
+port: "8080" #sfdsdffds
+db_pg_login: "postgres"
+db_pg_password: "1234"
+db_pg_addr: "localhost:5432"
+db_pg_dbname: "test"
+db_pg_nossl: true
+debug: true
+textlog: true
+migrations: "migrations"
