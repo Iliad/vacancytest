@@ -16,6 +16,7 @@ type DB interface {
 	DeleteVacancy(ctx context.Context, id int) error
 
 	GetUser(ctx context.Context, login string) (*models.User, error)
+	GetUsers(ctx context.Context) ([]models.User, error)
 	GetUsersCount(ctx context.Context) (*uint, error)
 	CreateUser(ctx context.Context, user *models.User) error
 	ChangeUserRole(ctx context.Context, login string, role models.UserRole) error

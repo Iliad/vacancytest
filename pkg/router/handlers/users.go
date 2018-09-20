@@ -13,6 +13,32 @@ import (
 	"github.com/gin-gonic/gin/binding"
 )
 
+func GetUserHandler(ctx *gin.Context) {
+	db := ctx.MustGet(middleware.DBContext).(db.DB)
+	user, err := db.GetUser(ctx.Request.Context(), ctx.Param("login"))
+	if err != nil {
+		ctx.Error(err)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+	user.Password = ""
+	ctx.JSON(http.StatusOK, user)
+}
+
+func GetUsersHandler(ctx *gin.Context) {
+	db := ctx.MustGet(middleware.DBContext).(db.DB)
+	users, err := db.GetUsers(ctx.Request.Context())
+	if err != nil {
+		ctx.Error(err)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+	for i := range users {
+		users[i].Password = ""
+	}
+	ctx.JSON(http.StatusOK, users)
+}
+
 func CreateUserHandler(ctx *gin.Context) {
 	db := ctx.MustGet(middleware.DBContext).(db.DB)
 

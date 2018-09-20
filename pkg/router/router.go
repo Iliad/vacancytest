@@ -27,6 +27,8 @@ func CreateRouter(db *db.DB) http.Handler {
 func initRoutes(app *gin.Engine) {
 	users := app.Group("/users")
 	{
+		users.GET("/:login", middleware.CheckAuth(true), handlers.GetUserHandler)
+		users.GET("", middleware.CheckAuth(true), handlers.GetUsersHandler)
 		users.POST("/register", handlers.CreateUserHandler)
 		users.POST("/role", middleware.CheckAuth(true), handlers.SetUserRoleHandler)
 	}

@@ -38,6 +38,24 @@ func (pgdb *pgDB) GetUsersCount(ctx context.Context) (*uint, error) {
 	return &usersCount, err
 }
 
+func (pgdb *pgDB) GetUsers(ctx context.Context) ([]models.User, error) {
+	pgdb.log.Infoln("Get users")
+	var users []models.User
+	rows, err := pgdb.conn.QueryxContext(ctx, "SELECT * FROM users")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var user models.User
+		if err := rows.StructScan(&user); err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	return users, err
+}
+
 func (pgdb *pgDB) GetUser(ctx context.Context, login string) (*models.User, error) {
 	pgdb.log.Infoln("Get user", login)
 	var user models.User
@@ -47,7 +65,11 @@ func (pgdb *pgDB) GetUser(ctx context.Context, login string) (*models.User, erro
 	}
 	defer rows.Close()
 	if !rows.Next() {
-		return nil, rows.Err()
+		if rows.Err() != nil {
+			return nil, rows.Err()
+		} else {
+			return nil, errors.New("user not exists")
+		}
 	}
 	err = rows.StructScan(&user)
 	return &user, err
