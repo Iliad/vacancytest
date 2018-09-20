@@ -1,4 +1,4 @@
-port: "8080" #sfdsdffds
+port: "8080"
 db_pg_login: "postgres"
 db_pg_password: "1234"
 db_pg_addr: "localhost:5432"
